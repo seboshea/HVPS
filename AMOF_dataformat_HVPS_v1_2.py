@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Take processed HVPS data and generate a .nc file that meets CEDA criteria.
+import numpy as np
+import h5py
+import os
+import datetime
+import netCDF4
+import matplotlib.pyplot as plt 
+import pandas as pd
+
 
 # v1.0 21/01/2021
 # Original
@@ -13,18 +20,6 @@
 #v1.2 4/2/2021
 # Can accept pre AMOF .nc file.
 # Change "_" to "-" as requested by CEDA
-
-
-
-import numpy as np
-import h5py
-import os
-import datetime
-import netCDF4
-import matplotlib.pyplot as plt 
-import pandas as pd
-
-
 
 
 #_________________________________________________________________
@@ -70,7 +65,9 @@ def LoadOAPH5(DataPath, DataFileName):
 def CovertTimeBase2NC(FAAMCore, VariableStr, TimeIndex, TimeDiff, FillValueOld,FillValueNew):
     tmp = np.array(FAAMCore[VariableStr][:])
     tmp_nc = tmp[TimeIndex]
-    tmp_nc[TimeDiff>=1] = FillValueNew
+    #tmp_nc[TimeDiff>=1] = FillValueNew
+    NanIdx = TimeIndex[TimeDiff>=1]
+    tmp_nc[NanIdx] = FillValueNew
     tmp_nc[tmp_nc == FillValueOld]= FillValueNew
     return tmp_nc
 
@@ -120,25 +117,25 @@ def LoadCoreVariables4AMOF(CorePath,CoreFileName,Time_mid):
 #DataPath = 'C:/Users/mbexjso2/OneDrive - The University of Manchester/Documents/Work/Picasso/rawData/C174/' #Path to HVPS data file
 #DataFileName = 'HVPS_C174.h5'
 
-FlightNumberStr = 'c174'
-FlightDate = datetime.datetime(2019,5,23)
-CoreFileName = 'core_faam_20190523_v004_r0_c174_1hz.nc'
-DataFileName = 'UMAN-HVPS_20190523_r1_C174.nc'
+#FlightNumberStr = 'c174'
+#FlightDate = datetime.datetime(2019,5,23)
+#CoreFileName = 'core_faam_20190523_v004_r0_c174_1hz.nc'
+#DataFileName = 'UMAN-HVPS_20190523_r1_C174.nc'
 
-# FlightNumberStr = 'c172'
-# FlightDate = datetime.datetime(2019,5,7)
-# CoreFileName = 'core_faam_20190507_v004_r0_c172_1hz.nc'
-# DataFileName = 'UMAN-HVPS_20190507_r1_C172.nc'
+#FlightNumberStr = 'c172'
+#FlightDate = datetime.datetime(2019,5,7)
+#CoreFileName = 'core_faam_20190507_v004_r0_c172_1hz.nc'
+#DataFileName = 'UMAN-HVPS_20190507_r1_C172.nc'
 
-# FlightNumberStr = 'c171'
-# FlightDate = datetime.datetime(2019,5,1)
-# CoreFileName = 'core_faam_20190501_v004_r0_c171_1hz.nc'
-# DataFileName = 'UMAN-HVPS_20190501_r1_C171.nc'
+#FlightNumberStr = 'c171'
+#FlightDate = datetime.datetime(2019,5,1)
+#CoreFileName = 'core_faam_20190501_v004_r0_c171_1hz.nc'
+#DataFileName = 'UMAN-HVPS_20190501_r1_C171.nc'
 
-# FlightNumberStr = 'c170'
-# FlightDate = datetime.datetime(2019,4,26)
-# CoreFileName = 'core_faam_20190426_v004_r0_c170_1hz.nc'
-# DataFileName = 'UMAN-HVPS_20190426_r1_C170.nc'
+#FlightNumberStr = 'c170'
+#FlightDate = datetime.datetime(2019,4,26)
+#CoreFileName = 'core_faam_20190426_v004_r0_c170_1hz.nc'
+#DataFileName = 'UMAN-HVPS_20190426_r1_C170.nc'
 
 # FlightNumberStr = 'c169'
 # FlightDate = datetime.datetime(2019,4,16)
@@ -170,10 +167,10 @@ DataFileName = 'UMAN-HVPS_20190523_r1_C174.nc'
 # CoreFileName = 'core_faam_20180208_v004_r0_c080_1hz.nc'
 # DataFileName = 'UMAN-HVPS_20180208_r1_C080.nc'
 
-# FlightNumberStr = 'c079'
-# FlightDate = datetime.datetime(2018,2,8)
-# CoreFileName = 'core_faam_20180208_v004_r0_c079_1hz.nc'
-# DataFileName = 'UMAN-HVPS_20180208_r1_C079.nc'
+FlightNumberStr = 'c079'
+FlightDate = datetime.datetime(2018,2,8)
+CoreFileName = 'core_faam_20180208_v004_r0_c079_1hz.nc'
+DataFileName = 'UMAN-HVPS_20180208_r1_C079.nc'
 
 CorePath = 'D:/PICASSO/rawdata/FAAM_Data/AllCoreFaam/' #Paths to core data file
 DataPath = 'D:/PICASSO/Processed/NewestVersionHVPS/' #Path to HVPS data file
@@ -184,7 +181,7 @@ DataPath = 'D:/PICASSO/Processed/NewestVersionHVPS/' #Path to HVPS data file
 
 
 
-rnumber = 2 # revision number
+rnumber = 0 # revision number
 vnumber = '001'# Don't change relates to versions of processing software (currently not defined)
 NormFlag = 0 # Change if data normalised, 0 = dN, 1 = dN/dD
 UnitConversion =1E-3 # Factor to convert input PSD to cm-3 
