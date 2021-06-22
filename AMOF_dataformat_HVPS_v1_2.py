@@ -175,24 +175,18 @@ DataFileName = 'UMAN-HVPS_20180208_r1_C079.nc'
 CorePath = 'D:/PICASSO/rawdata/FAAM_Data/AllCoreFaam/' #Paths to core data file
 DataPath = 'D:/PICASSO/Processed/NewestVersionHVPS/' #Path to HVPS data file
 
-
-
-
-
-
-
 rnumber = 0 # revision number
 vnumber = '001'# Don't change relates to versions of processing software (currently not defined)
-NormFlag = 0 # Change if data normalised, 0 = dN, 1 = dN/dD
+NormFlag = 0 #  is the data normalised, 0 = dN, 1 = dN/dD
 UnitConversion =1E-3 # Factor to convert input PSD to cm-3 
-FlagConversion = 1 # Conversion so that flag data so that '0 = not used, 1 = valid data, 2 = reduced quality data. 3 = missing data'
+FlagConversion = 0 # Conversion so that flag data is '0 = not used, 1 = valid data, 2 = reduced quality data. 3 = missing data'
 FillValue = -1E20 # Fill value of output data file
 
 #Load PSDs file
 #DataFlag, Psd, Counts, Size_mid, Size_edge, Time_mid, Time_edge = LoadOAPH5(DataPath, DataFileName)
 DataFlag, Psd, Counts, Size_mid, Size_edge, Time_mid, Time_edge = LoadHVPS_preAMOFformat(DataPath, DataFileName)
 
-DataFlag += FlagConversion # Conversion so that flag data so that '0 = not used, 1 = valid data, 2 = reduced quality data. 3 = missing data'
+DataFlag += FlagConversion # Conversion so that flag data '0 = not used, 1 = valid data, 2 = reduced quality data. 3 = missing data'
 DataFlag_2D = np.array([DataFlag,]*len(Size_mid)).transpose()
 
 # Load variables from core files
