@@ -1,5 +1,13 @@
 # -*- coding: utf-8 -*-
 
+
+
+# Put psd in AMOF format
+# Need to read in psd (with dimensions time and index) from separate file. Needs to include 
+# DataFlag, Psd, Counts, Size_mid, Size_edge, Time_mid, Time_edge
+# There are examples for .nc and .h5 files, but these need to altered for specific files.
+
+
 import numpy as np
 import h5py
 import os
